@@ -1,0 +1,17 @@
+Package: Maize6KGSP
+Type: Package
+Title: Maize6K-GS Array-Based Genomic Prediction Platform
+Version: 0.1
+Author: Guangning Yu, Yang Xu, Chenwu Xu
+Maintainer: Guangning Yu <mx120200746@yzu.edu.cn>
+Description: Based on the maizeGS-6K array and GS intelligent breeding platform, users can import parental genotypic and hybrid phenotypic data for the platform to infer F1 genotypes and perform phenotypic prediction. Preloaded with training population datasets, the platform enables integration with its native data upon input of maizeGS-6K-derived genotyping data, thus facilitating breeding resource sharing and utilization. This collaborative  array-platform solution significantly cuts the time and costs of maize GS breeding.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Depends: R (>= 4.1.0)
+Imports: BGLR, glmnet, xgboost, pls, data.table, doParallel, foreach,shiny,DT,utils
+NeedsCompilation: no
+Packaged: 2025-12-09 10:16:14 UTC; Administrator
+Repository: CRAN
+Date/Publication: 2025-12-09 16:40:02 UTC
