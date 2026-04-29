@@ -76,8 +76,8 @@ phenotype_predict <- function(train_fix = NULL, breed_fix = NULL, train_geno, br
         # library(xgboost)
         train_geno <- cbind(train_fix, train_geno)
         breed_geno <- cbind(breed_fix, breed_geno)
-        xg <- xgboost(data = train_geno, label = train_phe, colsample_bytree = 0.9, eta = 0.02, min_child_weight = 11,
-            nrounds = 1150, subsample = 0.8, nthread = 8, set.seed(123), verbose = FALSE)
+        xg <- xgboost(x = train_geno, y = train_phe, colsample_bytree = 0.9, eta = 0.02, min_child_weight = 11,
+            nrounds = 1150, subsample = 0.8, nthreads = 8, set.seed(123), verbose = FALSE)
         pred_phe <- as.matrix(predict(xg, breed_geno))
         return(pred_phe)
     }

@@ -437,7 +437,7 @@ Maize6KGSP.GUI <- function() {
                                                            fluidRow(
                                                              column(width=4,
                                                                     radioButtons('breedcrossinput', label = h4('crosses name (breeding population, optional)'),
-                                                                                 c('Not included'='NULL','Input a train crosses'='input'))),
+                                                                                 c('Not included'='NULL','Input a breed crosses'='input'))),
                                                              column(width=8,
                                                                     conditionalPanel(condition = 'input.breedcrossinput=="input"',
                                                                                      fileInput('breed_crosses', label=h4('crosses name')))))),

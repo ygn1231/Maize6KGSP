@@ -4,7 +4,7 @@ Title: Maize6K-GS Array-Based Genomic Prediction Platform
 Version: 0.1
 Author: Guangning Yu, Yang Xu, Chenwu Xu
 Maintainer: Guangning Yu <mx120200746@yzu.edu.cn>
-Description: Based on the maizeGS-6K array and GS intelligent breeding platform, users can import parental genotypic and hybrid phenotypic data for the platform to infer F1 genotypes and perform phenotypic prediction. Preloaded with training population datasets, the platform enables integration with its native data upon input of maizeGS-6K-derived genotyping data, thus facilitating breeding resource sharing and utilization. This collaborative  array-platform solution significantly cuts the time and costs of maize GS breeding.
+Description: Based on the maize6K-GS array and GS intelligent breeding platform, users can import parental genotypic and hybrid phenotypic data for the platform to infer F1 genotypes and perform phenotypic prediction.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

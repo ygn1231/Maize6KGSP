@@ -58,7 +58,7 @@ cv <- function(fix = NULL, gen, y, method = "GBLUP", drawplot = TRUE, nfold = 5,
         }
         cl <- makeCluster(cl.cores)
         registerDoParallel(cl)
-        res <- foreach(k = 1:nfold, .multicombine = TRUE, .combine = "rbind", .packages = c("predhy")) %dopar% {
+        res <- foreach(k = 1:nfold, .multicombine = TRUE, .combine = "rbind", .packages = c("Maize6KGSP")) %dopar% {
             i1 <- which(foldid != k)
             i2 <- which(foldid == k)
             x1 <- fix[i1, , drop = F]
@@ -245,7 +245,8 @@ cv <- function(fix = NULL, gen, y, method = "GBLUP", drawplot = TRUE, nfold = 5,
             x2 <- z[id2, ]
             y1 <- y[id1]
             y2 <- y[id2]
-            xg <- xgboost(data = x1, label = y1, nrounds = 1000, eta = 0.07)
+            xg <- xgboost(x = x1, y = y1, colsample_bytree = 0.9, eta = 0.02, min_child_weight = 11,
+            nrounds = 1150, subsample = 0.8, nthreads = 8, set.seed(123), verbose = FALSE)
             yhat <- predict(xg, x2)
             yp <- yhat
             yo <- y2

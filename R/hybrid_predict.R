@@ -25,7 +25,8 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         }
         # library(xgboost)
         x <- gena
-        xg <- xgboost(data = x, label = y, nrounds = 1000, eta = 0.07)
+        xg <- xgboost(x = x, y = y, colsample_bytree = 0.9, eta = 0.02, min_child_weight = 11,
+            nrounds = 1150, subsample = 0.8, nthreads = 8, set.seed(123), verbose = FALSE)
         for (i in 1:(ncol(predparent_gen) - 1)) {
             ha1 <- t((predparent_gen[, i] + predparent_gen[, -(1:i)])/2)
             X <- ha1
