@@ -949,7 +949,7 @@ Maize6KGSP.GUI <- function() {
         
         req(inbred_geno(),hybrid_filtered_phenotype())
         
-        result<-hybrid.predict(inbred_gen = inbred_geno(),hybrid_phe=hybrid_filtered_phenotype(),method=hybrid_predict_method(),select(),number())
+        result<-hybrid_predict(inbred_gen = inbred_geno(),hybrid_phe=hybrid_filtered_phenotype(),method=hybrid_predict_method(),select(),number())
         pred(result)
       })
       

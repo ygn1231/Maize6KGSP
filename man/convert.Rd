@@ -36,7 +36,7 @@ Convert genotypes in HapMap format ,VCF format or in numeric format for convert 
 ## load genotype in HapMap format with double bit
 data(input_geno)
 
-## convert genotype for Maize6KGSPred package
+## convert genotype for Maize6KGSP package
 inbred_gen <- convert(input_geno, type = "hmp2")
 
 
@@ -44,7 +44,7 @@ inbred_gen <- convert(input_geno, type = "hmp2")
 data(input_geno1)
 head(input_geno1)
 
-## convert genotype for Maize6KGSPred package
+## convert genotype for Maize6KGSP package
 inbred_gen1 <- convert(input_geno1, type = "num")
 
 }

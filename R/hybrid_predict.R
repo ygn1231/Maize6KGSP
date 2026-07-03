@@ -10,23 +10,24 @@
 #' @return a data frame of prediction results with two columns. The first column denotes the names of male and female parents of the predicted hybrids, and the second column denotes the phenotypic values of the predicted hybrids.
 #' @examples
 #' \donttest{
-#' ## load example data from Maize6KGSPred package
+#' ## load example data from Maize6KGS package
 #' data(hybrid_phe)
 #' data(input_geno)
 #' inbred_gen <- convert(input_geno, type = 'hmp2')
 #'
-#' pred<-hybrid.predict(inbred_gen,hybrid_phe,method='LASSO',select='top',number='100')
+#' pred<-hybrid_predict(inbred_gen,hybrid_phe,method='LASSO',select='top',number='100')
 #'  }
 #' @export
-hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "top", number = "100") {
-    predict.xgboost <- function(inbred_gen, hybrid_phe) {
+hybrid_predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "top", number = "100") {
+    predict_xgboost <- function(inbred_gen, hybrid_phe) {
         if (!requireNamespace("xgboost", quietly = TRUE)) {
             stop("xgboost needed for this function to work. Please install it.", call. = FALSE)
         }
         # library(xgboost)
         x <- gena
-        xg <- xgboost(x = x, y = y, colsample_bytree = 0.9, eta = 0.02, min_child_weight = 11,
-            nrounds = 1150, subsample = 0.8, nthreads = 8, set.seed(123), verbose = FALSE)
+        
+        xg <- xgboost(x = x, y = y, colsample_bytree = 0.9, learning_rate = 0.02, min_child_weight = 11,
+            nrounds = 1150, subsample = 0.8, nthreads = 8,seed=123,verbosity = 0)
         for (i in 1:(ncol(predparent_gen) - 1)) {
             ha1 <- t((predparent_gen[, i] + predparent_gen[, -(1:i)])/2)
             X <- ha1
@@ -39,7 +40,7 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         row.names(ynew) <- phe_name
         return(ynew)
     }
-    predict.bayesb <- function(inbred_gen, hybrid_phe) {
+    predict_bayesb <- function(inbred_gen, hybrid_phe) {
         if (!requireNamespace("BGLR", quietly = TRUE)) {
             stop("BGLR needed for this function to work. Please install it.", call. = FALSE)
         }
@@ -63,7 +64,7 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         row.names(ynew) <- phe_name
         return(ynew)
     }
-    predict.lasso <- function(inbred_gen, hybrid_phe) {
+    predict_lasso <- function(inbred_gen, hybrid_phe) {
         if (!requireNamespace("glmnet", quietly = TRUE)) {
             stop("glmnet needed for this function to work. Please install it.", call. = FALSE)
         }
@@ -84,7 +85,7 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         row.names(ynew) <- phe_name
         return(ynew)
     }
-    predict.pls <- function(inbred_gen, hybrid_phe) {
+    predict_pls <- function(inbred_gen, hybrid_phe) {
         if (!requireNamespace("pls", quietly = TRUE)) {
             stop("pls needed for this function to work. Please install it.", call. = FALSE)
         }
@@ -104,7 +105,7 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         row.names(ynew) <- phe_name
         return(ynew)
     }
-    predict.GBLUP <- function(inbred_gen, hybrid_phe) {
+    predict_GBLUP <- function(inbred_gen, hybrid_phe) {
         n <- nrow(hybrid_phe)
         ka <- kin(gena)
         fix <- matrix(1, n, 1)
@@ -131,7 +132,7 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         row.names(pred_phe) <- phe_name
         return(pred_phe)
     }
-    predict.rkhsmk <- function(inbred_gen, hybrid_phe) {
+    predict_rkhsmk <- function(inbred_gen, hybrid_phe) {
         # library(BGLR)
         for (i in 1:(ncol(predparent_gen) - 1)) {
             ha1 <- t((predparent_gen[, i] + predparent_gen[, -(1:i)])/2)
@@ -168,23 +169,21 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         (method == "PLS")) {
         if (method == "XGBoost") {
             print("Predict by XGBoost...")
-            predict_xgboost <- predict.xgboost(inbred_gen, hybrid_phe)
-            Results <- predict_xgboost
+			print("additive model")
+            Results <- predict_xgboost(inbred_gen, hybrid_phe)
             print("Predict by XGBoost...ended")
         }
         if (method == "BayesB") {
             print("Predict by BayesB...")
             print("additive model")
-            predict_bayesb <- predict.bayesb(inbred_gen, hybrid_phe)
-            Results <- predict_bayesb
+             Results <- predict_bayesb(inbred_gen, hybrid_phe)
 
             print("Predict by BayesB ...ended")
         }
         if (method == "LASSO") {
             print("Predict by LASSO ...")
             print("additive model")
-            predict_lasso <- predict.lasso(inbred_gen, hybrid_phe)
-            Results <- predict_lasso
+            Results <- predict_lasso(inbred_gen, hybrid_phe)
             print("Predict by LASSO ...ended")
         }
 
@@ -192,22 +191,20 @@ hybrid.predict <- function(inbred_gen, hybrid_phe, method = "GBLUP", select = "t
         if (method == "PLS") {
             print("Predict by PLS...")
             print("additive model")
-            predict_pls <- predict.pls(inbred_gen, hybrid_phe)
-            Results <- predict_pls
+            Results <- predict_pls(inbred_gen, hybrid_phe)
             print("Predict by PLS...ended.")
         }
         if (method == "GBLUP") {
             print("Predict by GBLUP ...")
             print("additive model")
-            predict_GBLUP <- predict.GBLUP(inbred_gen, hybrid_phe)
-            Results <- predict_GBLUP
+             Results <- predict_GBLUP(inbred_gen, hybrid_phe)
+            
             print("Predict by GBLUP ...ended")
         }
         if (method == "RKHS") {
             print("Predict by RKHS ...")
             print("additive model")
-            predict_rkhsmk <- predict.rkhsmk(inbred_gen, hybrid_phe)
-            Results <- predict_rkhsmk
+            Results <- predict_rkhsmk(inbred_gen, hybrid_phe)
             print("Predict by RKHS ...ended")
         }
         if (select == "all") {

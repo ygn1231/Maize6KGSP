@@ -245,8 +245,8 @@ cv <- function(fix = NULL, gen, y, method = "GBLUP", drawplot = TRUE, nfold = 5,
             x2 <- z[id2, ]
             y1 <- y[id1]
             y2 <- y[id2]
-            xg <- xgboost(x = x1, y = y1, colsample_bytree = 0.9, eta = 0.02, min_child_weight = 11,
-            nrounds = 1150, subsample = 0.8, nthreads = 8, set.seed(123), verbose = FALSE)
+            xg <- xgboost(x = x1, y = y1, colsample_bytree = 0.9, learning_rate = 0.02, min_child_weight = 11,
+            nrounds = 1150, subsample = 0.8, nthreads = 4,seed=123,verbosity = 0)
             yhat <- predict(xg, x2)
             yp <- yhat
             yo <- y2

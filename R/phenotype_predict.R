@@ -29,7 +29,7 @@
 #' @export
 
 phenotype_predict <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe, method = "GBLUP") {
-    predict.GBLUP <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
+    predict_GBLUP <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
         kk <- kin(train_geno)
         kk1 <- tcrossprod(breed_geno, train_geno)/ncol(train_geno)
         y <- train_phe
@@ -54,7 +54,7 @@ phenotype_predict <- function(train_fix = NULL, breed_fix = NULL, train_geno, br
         return(pred_phe)
     }
 
-    predict.pls <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
+    predict_pls <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
         if (!requireNamespace("pls", quietly = TRUE)) {
             stop("pls needed for this function to work. Please install it.", call. = FALSE)
         }
@@ -69,20 +69,20 @@ phenotype_predict <- function(train_fix = NULL, breed_fix = NULL, train_geno, br
         return(pred_phe)
     }
 
-    predict.xgboost <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
+    predict_xgboost <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
         if (!requireNamespace("xgboost", quietly = TRUE)) {
             stop("xgboost needed for this function to work. Please install it.", call. = FALSE)
         }
         # library(xgboost)
-        train_geno <- cbind(train_fix, train_geno)
-        breed_geno <- cbind(breed_fix, breed_geno)
-        xg <- xgboost(x = train_geno, y = train_phe, colsample_bytree = 0.9, eta = 0.02, min_child_weight = 11,
-            nrounds = 1150, subsample = 0.8, nthreads = 8, set.seed(123), verbose = FALSE)
-        pred_phe <- as.matrix(predict(xg, breed_geno))
+        train_geno1 <- as.matrix(cbind(train_fix, train_geno))
+        breed_geno1 <- as.matrix(cbind(breed_fix, breed_geno))
+        xg <- xgboost(x = train_geno1, y = train_phe, colsample_bytree = 0.9, learning_rate = 0.02, min_child_weight = 11,
+            nrounds = 1150, subsample = 0.8, nthreads = 8,seed=123,verbosity = 0)
+        pred_phe <- as.matrix(predict(xg, breed_geno1))
         return(pred_phe)
     }
 
-    predict.lasso <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
+    predict_lasso <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
         if (!requireNamespace("glmnet", quietly = TRUE)) {
             stop("glmnet needed for this function to work. Please install it.", call. = FALSE)
         }
@@ -95,7 +95,7 @@ phenotype_predict <- function(train_fix = NULL, breed_fix = NULL, train_geno, br
         return(pred_phe)
     }
 
-    predict.bayesb <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
+    predict_bayesb <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
         if (!requireNamespace("BGLR", quietly = TRUE)) {
             stop("BGLR needed for this function to work. Please install it.", call. = FALSE)
         }
@@ -114,7 +114,7 @@ phenotype_predict <- function(train_fix = NULL, breed_fix = NULL, train_geno, br
         return(pred_phe)
     }
 
-    predict.rkhsmk <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
+    predict_rkhsmk <- function(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe) {
         if (!requireNamespace("BGLR", quietly = TRUE)) {
             stop("BGLR needed for this function to work. Please install it.", call. = FALSE)
         }
@@ -145,44 +145,44 @@ phenotype_predict <- function(train_fix = NULL, breed_fix = NULL, train_geno, br
 
         if (method == "GBLUP") {
 		    print("Predict by GBLUP ...")
-            res <- predict.GBLUP(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            res <- predict_GBLUP(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
 			print("Predict by GBLUP ...ended")
         }
         if (method == "BayesB") {
 		    print("Predict by BayesB...")
-            res <- predict.bayesb(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            res <- predict_bayesb(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
 			print("Predict by BayesB ...ended")
         }
         if (method == "RKHS") {
 		    print("Predict by RKHS ...")
-            res <- predict.rkhsmk(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            res <- predict_rkhsmk(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
 			print("Predict by RKHS ...ended")
         }
         if (method == "PLS") {
 		    print("Predict by PLS...")
-            res <- predict.pls(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            res <- predict_pls(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
 			print("Predict by PLS...ended.")
         }
         if (method == "LASSO") {
 		    print("Predict by LASSO ...")
-            res <- predict.lasso(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            res <- predict_lasso(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
 			print("Predict by LASSO ...ended")
         }
 
         if (method == "XGBoost") {
 		    print("Predict by XGBoost...")
-            res <- predict.xgboost(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            res <- predict_xgboost(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
 		    print("Predict by XGBoost...ended")	
         }
 
         if (method == "ALL") {
             print("Predict by ALL...")
-            GBLUP <- predict.GBLUP(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
-            BayesB <- predict.bayesb(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
-            RKHS <- predict.rkhsmk(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
-            PLS <- predict.pls(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
-            LASSO <- predict.lasso(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
-            XGBoost <- predict.xgboost(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            GBLUP <- predict_GBLUP(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            BayesB <- predict_bayesb(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            RKHS <- predict_rkhsmk(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            PLS <- predict_pls(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            LASSO <- predict_lasso(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
+            XGBoost <- predict_xgboost(train_fix = NULL, breed_fix = NULL, train_geno, breed_geno, train_phe)
             res <- cbind(GBLUP, BayesB, RKHS, PLS, LASSO, XGBoost)
             colnames(res) <- c("GBLUP", "BayesB", "RKHS", "PLS", " LASSO", "XGBoost")
             print("Predict by ALL...ended.")
