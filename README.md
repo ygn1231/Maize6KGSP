@@ -13,49 +13,35 @@
   <img src="https://img.shields.io/badge/license-GPL--3-green.svg" alt="License">
 </p>
 
-`Maize6KGSP` is an R package with a graphical user interface (GUI) developed for the **Maize6K-GS array**.  
-It provides an integrated and user-friendly workflow for genotype processing, F1 hybrid genotype inference, genomic prediction model evaluation, hybrid performance prediction, and phenotype prediction in maize breeding populations.
+`Maize6KGSP` is an R package with a Shiny-based graphical user interface (GUI) developed for the **Maize6K-GS array**. It provides an integrated workflow for genotype processing, F1 hybrid genotype inference, genomic prediction model evaluation, hybrid performance prediction, and phenotype prediction in maize breeding populations.
 
-The package is designed to connect **genotyping → model evaluation → genomic prediction → breeding selection** in one platform, while allowing users with limited programming experience to perform routine genomic selection analyses through a Shiny-based interface.
-
----
+The GUI is designed for routine genomic-selection analyses and allows users to complete the main analytical steps without writing R code.
 
 ## Contents
 
-- [OVERVIEW](#overview)
-- [CITATION](#citation)
-- [GETTING STARTED](#getting-started)
-  - [Installation](#installation)
-  - [Launch Maize6KGSP](#launch-maize6kgsp)
-  - [Example datasets](#example-datasets)
-- [WORKFLOW](#workflow)
-- [INPUT](#input)
-  - [Genotype data](#genotype-data)
-  - [Hybrid phenotype data](#hybrid-phenotype-data)
-  - [Cross information](#cross-information)
-- [USAGE](#usage)
-  - [1. Genotype conversion and quality control](#1-genotype-conversion-and-quality-control)
-  - [2. Hybrid genotype inference](#2-hybrid-genotype-inference)
-  - [3. Genotype integration](#3-genotype-integration)
-  - [4. Predictability evaluation](#4-predictability-evaluation)
-  - [5. Potential hybrid prediction](#5-potential-hybrid-prediction)
-  - [6. Phenotype prediction](#6-phenotype-prediction)
-- [GENOMIC SELECTION MODELS](#genomic-selection-models)
-- [OUTPUT](#output)
-- [FAQ AND HINTS](#faq-and-hints)
-- [CONTACT](#contact)
+- [Overview](#overview)
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Launch Maize6KGSP](#launch-maize6kgsp)
+- [Package dependencies](#package-dependencies)
+- [Example datasets](#example-datasets)
+- [Input data](#input-data)
+- [GUI modules and usage](#gui-modules-and-usage)
+- [Genomic selection models](#genomic-selection-models)
+- [Output](#output)
+- [GUI implementation](#gui-implementation)
+- [FAQ](#faq)
+- [Citation](#citation)
+- [Contact](#contact)
+- [License](#license)
 
----
-
-## OVERVIEW
-
-`Maize6KGSP` was developed as a genomic prediction platform for data generated using the **Maize6K-GS array**. It integrates genotype and phenotype data into a unified workflow for genomic selection and breeding decision support.
+## Overview
 
 The current GUI contains seven modules:
 
 | Module | Main function |
 |:--|:--|
-| **home** | Platform overview and one-click navigation |
+| **home** | Platform overview and navigation |
 | **convert** | Genotype format conversion, marker QC, and optional missing-genotype imputation |
 | **infergen** | F1 hybrid genotype inference from parental genotypes |
 | **geno_int** | Genotype harmonization between training and breeding populations |
@@ -65,47 +51,32 @@ The current GUI contains seven modules:
 
 ### Main features
 
-- 🌽 Designed for the **Maize6K-GS array**
-- 🧬 Supports multiple commonly used genotype formats
-- 🧹 Provides genotype conversion, quality control, and optional imputation
-- 🌱 Infers F1 hybrid genotypes from parental lines
-- 🔗 Harmonizes genotype datasets from training and prediction populations
-- 📊 Evaluates genomic prediction models by cross-validation
-- 🤖 Integrates six genomic selection algorithms
-- 🔮 Predicts phenotypes of untested hybrids or breeding materials
-- 🏆 Ranks candidate crosses according to predicted performance
-- 🖥️ Provides a graphical interface requiring no routine coding
+- Supports HapMap single-bit, HapMap double-bit, VCF, and numeric genotype matrices.
+- Performs marker-level quality control using missing-rate and minor-allele-frequency thresholds.
+- Supports optional missing-genotype imputation.
+- Infers F1 hybrid genotypes from parental inbred lines.
+- Harmonizes genotype datasets from training and prediction populations.
+- Evaluates six genomic prediction models by cross-validation.
+- Predicts and ranks untested hybrid combinations.
+- Predicts phenotypes of target inbred or hybrid populations.
+- Provides an interactive Shiny GUI for routine analyses.
 
-`Maize6KGSP` was developed by **Guangning Yu, Yang Xu, and Chenwu Xu**.
+## Documentation
 
----
+A detailed graphical user manual with step-by-step instructions and screenshots is provided in the repository:
 
-## CITATION
+- **User manual (PDF):** [`docs/Maize6KGSP_User_Manual.pdf`](docs/Maize6KGSP_User_Manual.pdf)
+- **Editable manual (DOCX):** [`docs/Maize6KGSP_User_Manual.docx`](docs/Maize6KGSP_User_Manual.docx)
 
-If you use `Maize6KGSP` in your research, please cite the accompanying Maize6K-GS publication.
+The manual covers installation, GUI launch, input-file requirements, genotype conversion, quality control, hybrid genotype inference, genotype integration, cross-validation, hybrid prediction, and phenotype prediction.
 
-> **Citation information will be added after publication.**
+## Installation
 
-If you use the GitHub version before the associated article is formally published, please report the package name and version in the Methods section:
+### Option 1: Install directly from GitHub
 
-```text
-Maize6KGSP v0.1
-https://github.com/ygn1231/Maize6KGSP
-```
-
----
-
-## GETTING STARTED
-
-`Maize6KGSP` is written in R and requires **R >= 4.1.0**.  
-RStudio is recommended for convenient installation and use of the graphical interface.
-
-### Installation
-
-The package can be installed directly from GitHub using `devtools`:
+`Maize6KGSP` requires **R >= 4.1.0**. RStudio is recommended but is not required.
 
 ```r
-# Install devtools if necessary
 if (!requireNamespace("devtools", quietly = TRUE)) {
     install.packages("devtools")
 }
@@ -113,7 +84,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("ygn1231/Maize6KGSP", force = TRUE)
 ```
 
-Alternatively, the repository can be cloned and installed locally:
+### Option 2: Clone the repository and install locally
 
 ```bash
 git clone https://github.com/ygn1231/Maize6KGSP.git
@@ -122,274 +93,191 @@ git clone https://github.com/ygn1231/Maize6KGSP.git
 Then, in R:
 
 ```r
-install.packages("Maize6KGSP", repos = NULL, type = "source")
+if (!requireNamespace("devtools", quietly = TRUE)) {
+    install.packages("devtools")
+}
+
+devtools::install_local("Maize6KGSP", force = TRUE)
 ```
 
-### Launch Maize6KGSP
+## Launch Maize6KGSP
 
-After successful installation:
+After installation, launch the graphical interface with:
 
 ```r
 library(Maize6KGSP)
-
 Maize6KGSP.GUI()
 ```
 
-The GUI will open in the default browser or RStudio Viewer.
+The interface opens in the default web browser or the RStudio Viewer, depending on the local R environment.
 
-### Example datasets
+## Package dependencies
 
-Several example files are available directly in the repository:
-
-```text
-train_inbred.hmp.txt
-test_inbred.hmp.txt
-train_inbredphe.csv
-train_hybridphe.csv
-test_crosses_id.csv
-```
-
-These files can be used to become familiar with genotype conversion, hybrid genotype inference, model evaluation, genotype integration, and genomic prediction.
-
-A recommended first test is:
+The current package imports the following R packages:
 
 ```text
-train_inbred.hmp.txt
-        ↓
-      convert
-        ↓
-     infergen
-        ↓
-        cv
-        ↓
- hybrid_predict
+BGLR
+glmnet
+xgboost
+pls
+data.table
+doParallel
+foreach
+shiny
+DT
+utils
 ```
 
----
+These dependencies are declared in the package `DESCRIPTION` file and are normally installed automatically when `Maize6KGSP` is installed from GitHub.
 
-## WORKFLOW
+If a dependency must be installed manually, use for example:
 
-The modules can be used independently, but they are designed to form an integrated genomic breeding workflow.
-
-```text
-                         ┌─────────────────────┐
-                         │  Raw genotype data  │
-                         └──────────┬──────────┘
-                                    │
-                                    ▼
-                              ┌───────────┐
-                              │  convert  │
-                              └─────┬─────┘
-                                    │
-                  ┌─────────────────┴─────────────────┐
-                  │                                   │
-                  ▼                                   ▼
-           ┌─────────────┐                      ┌────────────┐
-           │  infergen   │                      │  geno_int  │
-           └──────┬──────┘                      └─────┬──────┘
-                  │                                   │
-                  ▼                                   ▼
-             ┌────────┐                       ┌───────────────────┐
-             │   cv   │                       │ phenotype_predict │
-             └───┬────┘                       └───────────────────┘
-                 │
-                 ▼
-        ┌────────────────┐
-        │ hybrid_predict │
-        └────────────────┘
+```r
+install.packages(c(
+    "BGLR", "glmnet", "xgboost", "pls", "data.table",
+    "doParallel", "foreach", "shiny", "DT"
+))
 ```
 
-### Typical breeding applications
+## Example datasets
 
-| Breeding objective | Recommended module(s) |
-|:--|:--|
-| Convert raw genotype files | `convert` |
-| Apply genotype QC and imputation | `convert` |
-| Infer genotypes of known F1 crosses | `infergen` |
-| Compare GS models | `cv` |
-| Match training and breeding genotypes | `geno_int` |
-| Rank untested hybrid combinations | `hybrid_predict` |
-| Predict target inbred/hybrid phenotypes | `phenotype_predict` |
+The repository includes example files corresponding to the main input types used by the GUI:
 
----
+| File | Data type | Main module(s) |
+|:--|:--|:--|
+| `train_inbred.hmp.txt` | Training/reference inbred genotype data (HapMap) | `convert`, `geno_int`, `hybrid_predict`, `phenotype_predict` |
+| `test_inbred.hmp.txt` | Target/breeding-population inbred genotype data (HapMap) | `convert`, `geno_int`, `phenotype_predict` |
+| `train_inbredphe.csv` | Individual-level phenotype data for a training/reference population | `cv`, `phenotype_predict` |
+| `train_hybridphe.csv` | Hybrid phenotype data with two parental IDs and a target trait | `cv`, `hybrid_predict` |
+| `test_crosses_id.csv` | Two-column parental combinations for target crosses | `infergen` |
 
-## INPUT
+The example files can be used directly to become familiar with the corresponding modules. Sample IDs and marker IDs must remain consistent among files that are used together.
 
-### Genotype data
+## Input data
 
-The `convert` and `geno_int` modules support four genotype input types:
+The input requirements below correspond directly to the files and fields used in the GUI and in the User Manual.
+
+### Input requirements by module
+
+| Module | Required input | Optional/reusable input |
+|:--|:--|:--|
+| `convert` | One genotype file | — |
+| `infergen` | Parental inbred genotype data + a two-column cross file | Genotype output from `convert` can be reused |
+| `geno_int` | Training/reference genotype data + target/breeding genotype data | — |
+| `cv` | Genotype data + phenotype data for the same individuals/hybrids | Hybrid genotype output from `infergen` can be reused |
+| `hybrid_predict` | Parental inbred genotype data + hybrid phenotype training data | Genotype output from `convert` can be reused |
+| `phenotype_predict` | Training/reference genotype data + target/breeding genotype data + training phenotype data | Matched `train_geno` and `breed_geno` from `geno_int` can be reused |
+
+### 1. Genotype data
+
+The `convert` and `geno_int` modules accept four genotype input types:
 
 1. **HapMap single-bit**
 2. **HapMap double-bit**
 3. **VCF**
 4. **Numeric genotype matrix**
 
-Marker-level quality control can be performed using:
+For HapMap and VCF input, standard marker and sample information should be retained. After conversion, Maize6KGSP uses a numeric genotype matrix in which rows represent individuals and columns represent markers.
 
-- marker missing rate
-- minor allele frequency (MAF)
-- optional missing-genotype imputation
-
-#### Example: numeric genotype matrix
+Example HapMap double-bit genotype data (`train_inbred.hmp.txt`):
 
 ```text
-ID      Marker1   Marker2   Marker3   Marker4
-Y10          1        -1         1         0
-Y25         -1         1         1         1
-Y104         1         0        -1         1
-Y105         1         1         0        -1
+rs#         alleles  chrom  pos      strand  assembly#  center  protLSID  assayLSID  panelLSID  QCcode  Y10  Y152  Y171  Y221
+1_564041    C/G      1      564041   +       NA         NA      NA        NA         NA         NA      CC   CC    CC    CG
+1_564313    T/C      1      564313   +       NA         NA      NA        NA         NA         NA      CC   CC    CC    TT
+1_1837808   G/A      1      1837808  +       NA         NA      NA        NA         NA         NA      GG   GG    GG    AA
+1_1921450   C/T      1      1921450  +       NA         NA      NA        NA         NA         NA      CC   CC    CC    CC
 ```
 
-> **Important:** sample names and marker identifiers should remain consistent across genotype, phenotype, and cross files.
+The first 11 columns contain standard HapMap marker information, followed by genotype calls for each sample. The example above is a shortened excerpt of the provided `train_inbred.hmp.txt` file.
 
----
+Marker-level quality-control options in `convert` include marker missing rate, minor allele frequency (MAF), and optional missing-genotype imputation.
 
-### Hybrid phenotype data
+> **Important:** Sample IDs and marker identifiers must be consistent across genotype, phenotype, and crossing files that are analyzed together.
 
-Hybrid phenotype data used for training should contain three columns:
+### 2. Individual phenotype data
+
+Individual-level phenotype data are used when one phenotypic value corresponds directly to each row of a genotype matrix, for example in `cv` or `phenotype_predict`. The phenotype input is a **single numeric trait vector**, and the sample identifiers (stored as row names/record names in the input file) must correspond to the row names of the training/reference genotype matrix. Records used for model fitting should not contain missing phenotypic values.
+
+The provided `train_inbredphe.csv` file is organized as follows:
 
 ```text
-Female    Male    Trait
-Y104      Y213    2.4940
-Y105      Y192    2.4668
-Y105      Y207    2.2430
-Y105      Y219    2.3917
+Line,PH,EW
+Y1,148.90273,66.62261111
+Y2,153.6443966,59.02416667
+Y10,118.0610633,48.06853247
+Y11,153.82773,76.03577778
 ```
 
-The first two columns identify the parents of each hybrid, and the third column contains the observed phenotypic value.
+The first column (`Line`) contains the sample identifiers, and the remaining columns contain phenotypic values for one or more traits (for example, `PH` and `EW`). In the GUI, users select the target trait for analysis. Sample identifiers in the `Line` column must correspond to the row names or sample IDs in the associated genotype dataset.
 
-Requirements:
+### 3. Hybrid phenotype data
 
-- parental IDs must exist in the parental genotype dataset;
-- records used for training should have non-missing phenotypic values;
-- the phenotype column should contain the trait used for model fitting.
-
----
-
-### Cross information
-
-The `infergen` module requires a two-column file describing the target crosses:
+Hybrid phenotype data used for `hybrid_predict` must include the two parental ID columns and at least one observed trait column. The example files and GUI use `F` and `M` for the two parents. One or more trait columns (for example `EW` and `PH`) may be present; users specify the target trait required for the analysis in the GUI.
 
 ```text
-Parent1    Parent2
-Y104       Y213
-Y105       Y192
-Y105       Y207
-Y107       Y25
+F       M       EW        PH
+Y100    Y421    191.7891  2.3927
+Y102    Y426    163.7430  2.5459
+Y103    Y426    183.7657  2.5431
+Y104    Y213    198.4517  2.4940
 ```
 
-Both parental IDs must match individuals in the uploaded parental genotype matrix.
+Both parental IDs must occur in the parental inbred genotype dataset. The target trait used for model fitting should not contain missing values. The example file `train_hybridphe.csv` represents this input type.
 
----
+### 4. Cross information
 
-## USAGE
+The `infergen` module requires a two-column file specifying the parents of each target cross. The example files and GUI use `F` and `M` as the two parental columns:
 
-### 1. Genotype conversion and quality control
+```text
+F       M
+Y100    Y421
+Y102    Y426
+Y103    Y426
+Y104    Y213
+```
 
-The **convert** module imports raw genotype files and converts them into the numeric representation required by downstream analyses.
+Both parental IDs must exactly match IDs in the parental inbred genotype data. The example file `test_crosses_id.csv` represents this input type.
 
-#### Steps
+### Input-file consistency checks
+
+Before running an analysis, confirm that:
+
+- sample IDs use exactly the same spelling and capitalization in all related files;
+- parental IDs in hybrid phenotype and cross files are present in the parental genotype data;
+- phenotype records correspond to the individuals or hybrids represented by the genotype input;
+- marker identifiers are compatible between training/reference and target/breeding genotype datasets when `geno_int` is used;
+- records used for model fitting do not contain missing phenotypic values.
+
+## GUI modules and usage
+
+### 1. Genotype conversion and quality control (`convert`)
+
+Use `convert` to import genotype data, convert them to the numeric representation used by downstream analyses, apply marker-level QC, and optionally impute missing genotypes.
+
+Typical steps:
 
 1. Open the **convert** tab.
 2. Select the genotype format.
 3. Upload the genotype file.
-4. Set the marker missing-rate threshold.
-5. Set the MAF threshold.
-6. Choose whether missing genotypes should be imputed.
-7. Click **Run Genotype data conversion**.
-8. Inspect the result in the interactive table.
-9. Download the converted genotype data if needed.
+4. Set the marker missing-rate and MAF thresholds.
+5. Select whether missing genotypes should be imputed.
+6. Click **Run Genotype data conversion**.
+7. Inspect or download the converted genotype matrix.
 
-#### Main output
+### 2. Hybrid genotype inference (`infergen`)
 
-```text
-Converted numerical genotype matrix
-```
+Use `infergen` to infer F1 hybrid genotypes from parental inbred genotypes and the two-column cross file described under **Input data**. Parental genotypes can be uploaded directly or reused from the `convert` module.
 
-The result can also be reused directly by other modules in the same GUI session.
+### 3. Genotype integration (`geno_int`)
 
----
+Use `geno_int` to harmonize the training/reference and target/breeding genotype datasets described under **Input data**. The module generates compatible `train_geno` and `breed_geno` matrices that can be reused in `phenotype_predict`.
 
-### 2. Hybrid genotype inference
+### 4. Predictability evaluation (`cv`)
 
-The **infergen** module infers F1 hybrid genotypes from parental inbred genotypes and a user-defined cross list.
+Use `cv` to evaluate genomic prediction models by cross-validation. The genotype and phenotype inputs must describe the same individuals or hybrids. Hybrid genotypes produced by `infergen` may be reused directly. User-defined settings include the GS model, number of folds, number of replicates, random seed, and CPU number.
 
-#### Input
-
-- parental inbred genotype matrix
-- target cross file
-
-The parental genotype source can be either:
-
-```text
-Upload file
-```
-
-or
-
-```text
-Use convert result
-```
-
-#### Run
-
-Click:
-
-```text
-Run Hybrid genotype inference
-```
-
-#### Main output
-
-```text
-F1 hybrid genotype matrix
-```
-
-The inferred genotypes can be downloaded or passed directly to the `cv` module.
-
----
-
-### 3. Genotype integration
-
-The **geno_int** module harmonizes genotype datasets from training and breeding populations.
-
-This step is especially useful when the two populations were genotyped, formatted, or prepared separately.
-
-#### Input
-
-```text
-Training population genotype
-Breeding population genotype
-```
-
-After matching compatible genotype information, the module generates:
-
-```text
-train_geno
-breed_geno
-```
-
-These two matrices contain compatible marker information and can be reused directly by `phenotype_predict`.
-
-> **Important:** phenotype records used for model training must correspond to individuals in `train_geno`, while target individuals must correspond to `breed_geno`.
-
----
-
-### 4. Predictability evaluation
-
-The **cv** module evaluates the predictive ability of genomic selection models through cross-validation.
-
-#### Input
-
-- genotype data
-- phenotype data
-- GS model
-- number of folds
-- number of replicates
-- random seed
-- number of CPUs
-
-#### Example
+Example settings:
 
 ```text
 Method:       GBLUP
@@ -399,99 +287,17 @@ Seed:         123
 CPU:          1
 ```
 
-Click:
+### 5. Potential hybrid prediction (`hybrid_predict`)
 
-```text
-Run Predictability evaluation
-```
+Use `hybrid_predict` with parental inbred genotype data and the three-column hybrid phenotype training data described under **Input data**. The module predicts potential parental combinations and ranks candidate hybrids according to predicted performance. Users may return all possible crosses or select the top or bottom `n` combinations.
 
-The results can be inspected in the interactive table and exported using:
+### 6. Phenotype prediction (`phenotype_predict`)
 
-```text
-Download CV Results
-```
+Use `phenotype_predict` with training/reference genotypes, target/breeding genotypes, and individual-level training phenotypes as described under **Input data**. Compatible genotype matrices can be uploaded directly or reused from `geno_int`.
 
-The `cv` module is recommended before large-scale prediction so that an appropriate model can be selected for the trait and population under study.
+For screenshots and detailed step-by-step instructions for every module, see the [Maize6KGSP User Manual](docs/Maize6KGSP_User_Manual.pdf).
 
----
-
-### 5. Potential hybrid prediction
-
-The **hybrid_predict** module predicts the performance of potential crosses among a set of parental inbred lines.
-
-For `n` parental lines, all pairwise combinations correspond to:
-
-\[
-n(n-1)/2
-\]
-
-possible crosses.
-
-#### Input
-
-- parental genotype data
-- observed hybrid phenotypes for model training
-- selected GS model
-
-#### Candidate selection modes
-
-The GUI provides three options:
-
-```text
-All potential crosses
-Top n crosses
-Bottom n crosses
-```
-
-When `Top n` or `Bottom n` is selected, specify the number of candidate hybrids to retain.
-
-#### Main output
-
-```text
-Cross ID    Predicted phenotype
-```
-
-The resulting hybrids can be ranked and downloaded for downstream breeding decisions.
-
----
-
-### 6. Phenotype prediction
-
-The **phenotype_predict** module predicts phenotypic values for a target breeding population using a model trained in a reference population.
-
-It can be applied to:
-
-- inbred breeding populations
-- hybrid breeding populations
-
-#### Required input
-
-```text
-Training genotype
-Breeding genotype
-Training phenotype
-GS model
-```
-
-The genotype matrices may be uploaded independently or reused from `geno_int`.
-
-Click:
-
-```text
-Run Phenotype Prediction
-```
-
-#### Main output
-
-```text
-Individual    Predicted phenotype
-```
-
-The complete prediction table can be downloaded for selection, ranking, or subsequent breeding analyses.
-
----
-
-## GENOMIC SELECTION MODELS
+## Genomic selection models
 
 The current version integrates six genomic prediction methods:
 
@@ -504,13 +310,9 @@ The current version integrates six genomic prediction methods:
 | **LASSO** | Least Absolute Shrinkage and Selection Operator | Sparse regression |
 | **XGBoost** | Extreme Gradient Boosting | Tree-based machine learning |
 
-For a new trait or population, we recommend comparing candidate models with the `cv` module before performing final predictions.
+For a new trait or population, model performance should be evaluated with the `cv` module before final prediction.
 
----
-
-## OUTPUT
-
-Depending on the module used, `Maize6KGSP` can generate:
+## Output
 
 | Module | Major output |
 |:--|:--|
@@ -521,132 +323,64 @@ Depending on the module used, `Maize6KGSP` can generate:
 | `hybrid_predict` | Ranked candidate hybrids and predicted phenotypes |
 | `phenotype_predict` | Predicted phenotypic values of target individuals |
 
-Interactive result tables in the GUI support:
+Interactive GUI tables support browsing, searching, pagination, and result download.
 
-- browsing
-- searching
-- pagination
-- result download
+## GUI implementation
 
-For reproducible genomic prediction analyses, it is recommended to retain:
+The graphical interface is implemented in **R Shiny** and is launched from the installed R package using `Maize6KGSP.GUI()`. The interface integrates the package's genotype-processing and genomic-prediction functions into seven interactive modules. `DT` is used for interactive data-table display, and the remaining analytical dependencies are declared in the package `DESCRIPTION` file.
 
-```text
-Genotype data
-Phenotype data
-Cross information
-Model settings
-Random seed
-Downloaded prediction results
-```
+The GUI runs locally through the R/Shiny environment; no separate desktop executable is required.
 
----
+## FAQ
 
-## FAQ AND HINTS
-
-### 1. `devtools` is not installed
-
-Install it first:
+### `devtools` is not installed
 
 ```r
 install.packages("devtools")
 ```
 
-Then run:
+Then reinstall the package with `devtools::install_github()`.
 
-```r
-devtools::install_github("ygn1231/Maize6KGSP", force = TRUE)
-```
+### Samples are not matched between genotype and phenotype files
 
----
+Check for inconsistent capitalization, leading/trailing spaces, duplicated IDs, different separators, or parental IDs absent from the genotype file.
 
-### 2. Samples are not matched between genotype and phenotype files
+### Hybrid genotype inference does not run
 
-Check whether sample names are exactly identical.
+Confirm that every parental ID in the crossing file is present in the parental genotype dataset.
 
-Common causes include:
+### `phenotype_predict` cannot reuse genotype-integration results
 
-- inconsistent capitalization;
-- leading/trailing spaces;
-- duplicated IDs;
-- different separators;
-- parental IDs absent from the genotype file.
+Run `geno_int` first in the **same GUI session** and confirm that both `train_geno` and `breed_geno` were generated successfully.
 
----
+### Which GS model should be selected?
 
-### 3. Hybrid genotype inference does not run
+There is no single model that is optimal for every trait and population. Compare candidate models with the `cv` module and select a suitable model based on cross-validation performance.
 
-Check that:
+## Citation
 
-```text
-Parent1 ∈ parental genotype IDs
-Parent2 ∈ parental genotype IDs
-```
+If you use `Maize6KGSP` in your research, please cite the accompanying Maize6K-GS publication.
 
-for every cross in the input file.
+> **Citation information will be added after publication.**
 
----
-
-### 4. `phenotype_predict` cannot reuse genotype integration results
-
-Run `geno_int` first in the **same GUI session** and confirm that both:
+Before formal publication, the software can be reported as:
 
 ```text
-train_geno
-breed_geno
+Maize6KGSP v0.1
+https://github.com/ygn1231/Maize6KGSP
 ```
 
-were successfully generated.
-
----
-
-### 5. Which GS model should be selected?
-
-There is no single model that is optimal for every trait and population.
-
-A recommended workflow is:
-
-```text
-cv
- ↓
-compare prediction performance
- ↓
-select model
- ↓
-hybrid_predict / phenotype_predict
-```
-
----
-
-### 6. Why do predicted hybrid rankings differ among models?
-
-Different GS algorithms make different assumptions about marker effects and genetic architecture. Therefore, model ranking may change across traits and populations. Cross-validation should be used to evaluate model suitability before final prediction.
-
----
-
-## CONTACT
+## Contact
 
 **Maize6KGSP v0.1**
 
-Developed by:
+Developed by **Guangning Yu, Yang Xu, and Chenwu Xu**  
+Maintainer: **Guangning Yu**  
+Email: **mx120200746@yzu.edu.cn**  
+Repository: **https://github.com/ygn1231/Maize6KGSP**
 
-**Guangning Yu · Yang Xu · Chenwu Xu**
+Bug reports, questions, and suggestions are welcome through GitHub Issues or by email.
 
-Maintainer:
-
-**Guangning Yu**
-
-Email:
-
-**mx120200746@yzu.edu.cn**
-
-Repository:
-
-**https://github.com/ygn1231/Maize6KGSP**
-
-Bug reports, questions, and suggestions are welcome through the GitHub Issues page or by email.
-
----
-
-## LICENSE
+## License
 
 `Maize6KGSP` is distributed under the **GPL-3** license.
